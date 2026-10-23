@@ -1,0 +1,107 @@
+{
+  "name": "zai-quota",
+  "displayName": "GLM Quota",
+  "description": "Show z.ai GLM Coding Plan quota usage in the VS Code status bar.",
+  "version": "0.5.2",
+  "publisher": "stellaris-local",
+  "license": "CC-BY-NC-SA-4.0",
+  "private": true,
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "zaiQuota.refresh",
+        "title": "Refresh",
+        "category": "GLM Quota"
+      },
+      {
+        "command": "zaiQuota.openUsagePage",
+        "title": "Open Usage Page",
+        "category": "GLM Quota"
+      },
+      {
+        "command": "zaiQuota.setApiKey",
+        "title": "Set API Key",
+        "category": "GLM Quota"
+      },
+      {
+        "command": "zaiQuota.clearApiKey",
+        "title": "Clear API Key",
+        "category": "GLM Quota"
+      }
+    ],
+    "configuration": {
+      "title": "GLM Quota",
+      "properties": {
+        "zaiQuota.host": {
+          "type": "string",
+          "default": "api.z.ai",
+          "enum": [
+            "api.z.ai",
+            "open.bigmodel.cn"
+          ],
+          "enumDescriptions": [
+            "z.ai (international)",
+            "BigModel (mainland China)"
+          ],
+          "markdownDescription": "Usage endpoint host. Your API key is sent only to this host; pick the one your key was issued by.",
+          "scope": "machine"
+        },
+        "zaiQuota.refreshIntervalSeconds": {
+          "type": "number",
+          "default": 60,
+          "minimum": 15,
+          "description": "How often to refresh GLM quota data (seconds, minimum 15)."
+        },
+        "zaiQuota.thresholds": {
+          "type": "object",
+          "default": {
+            "redBelowPercent": 10,
+            "amberBelowPercent": 30
+          },
+          "additionalProperties": false,
+          "properties": {
+            "redBelowPercent": {
+              "type": "number",
+              "default": 10,
+              "minimum": 0,
+              "maximum": 100,
+              "markdownDescription": "Remaining percentage below which the status bar shows the red warning background. Checked first."
+            },
+            "amberBelowPercent": {
+              "type": "number",
+              "default": 30,
+              "minimum": 0,
+              "maximum": 100,
+              "markdownDescription": "Remaining percentage below which the status bar shows the amber warning background (and at or above which it shows green text)."
+            }
+          },
+          "markdownDescription": "Color-band thresholds in percent of quota _remaining_. Example: `{ \"redBelowPercent\": 5, \"amberBelowPercent\": 50 }`"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "smoke": "node test/smoke.js",
+    "vscode:prepublish": "npm test",
+    "package": "npx --yes @vscode/vsce@4.0.0 package --no-dependencies"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1larity/zai-quota.git"
+  },
+  "homepage": "https://evile.uk/redesign/projects/glm-quota/",
+  "bugs": {
+    "url": "https://github.com/1larity/zai-quota/issues"
+  }
+}
