@@ -123,10 +123,4 @@ availability or interactive UI acceptance.
 - `.vscodeignore`: package allow-list; excludes tests, screenshots, credentials,
   local editor settings, source artwork and previous VSIX files.
 
-Gitea is the canonical development home. GitHub's `public` branch is a curated
-standalone snapshot; it intentionally does not contain private development
-history, experimental branches or tags. Each checkout can run its tests without
-access to the canonical workspace. Shared quota modules are vendored locally;
-changes must also be synchronized in the canonical quota workspace before a release.
-
 See [SECURITY.md](SECURITY.md) for sensitive reporting guidance.
