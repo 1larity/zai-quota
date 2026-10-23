@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/logo.png" alt="EVILE" width="96" height="96"></p>
+<p align="center"><img src="assets/logo.png" alt="GLM Quota" width="640"></p>
 
 # GLM Quota
 
