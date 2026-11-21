@@ -74,3 +74,11 @@ test('provider-reflected credentials never appear in errors', async t => {
     return true;
   });
 });
+
+test('fetchResets requests the personal reset-pack list on the configured host', async t => {
+  const seen = await fixture(t, (_req, res) => res.end(JSON.stringify({ success: true, data: { fiveHourResets: [] } })));
+  const result = await bounded(api.fetchResets('synthetic-token', { timeoutMs: 50 }));
+  assert.equal(result.host, 'api.z.ai');
+  assert.equal(seen[0].path, '/api/biz/customer-package-reset/list?targetType=PERSONAL');
+  assert.equal(seen[0].host, 'api.z.ai');
+});

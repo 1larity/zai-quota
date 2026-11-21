@@ -2,11 +2,12 @@
 
 const vscode = require('vscode');
 const api = require('./lib/api');
+const path = require('path');
 const { createMonitor } = require('./lib/monitor');
 const quota = require('./lib/quota');
 
 const SECRET_KEY = 'zaiQuota.apiKey';
-const USAGE_URL = 'https://z.ai/manage-apikey/usage';
+const USAGE_URL = 'https://z.ai/manage-apikey/coding-plan/personal/usage';
 
 let secrets = null;
 let monitor = null;
@@ -58,13 +59,34 @@ async function load(interactive) {
       diagnostic: `${usedHost} top-level keys: ${quota.keyPaths(body).slice(0, 24).join(', ')}`,
     });
   }
-  return { parsed, summary: `via ${usedHost}, windows=${parsed.windows.length}` };
+  // Reset packs are optional extra detail: a failed read keeps the quota
+  // display and logs the reason only.
+  let resetsNote = 'resets=none';
+  try {
+    const { body: resetsBody } = await api.fetchResets(apiKey, { host });
+    parsed.resets = quota.parseResetsResponse(resetsBody);
+    resetsNote = parsed.resets ? 'resets=ok' : 'resets=unrecognized';
+  } catch (error) {
+    resetsNote = `resets=failed:${(error && error.reason) || 'error'}`;
+  }
+  return { parsed, summary: `via ${usedHost}, windows=${parsed.windows.length}, ${resetsNote}` };
 }
 
 // The key changed: drop data shown for the old key, then refresh.
 function restartWithNewKey() {
   monitor.reset();
   monitor.refresh(false);
+}
+
+// cli.js and the opt-in MCP server (mcp.js), registered by the monitor.
+function agentOptions(provider, env) {
+  return {
+    provider,
+    cliPath: path.join(__dirname, 'cli.js'),
+    mcpPath: path.join(__dirname, 'mcp.js'),
+    version: require('./package.json').version,
+    env,
+  };
 }
 
 function activate(context) {
@@ -77,10 +99,18 @@ function activate(context) {
     priority: 49,
     usageUrl: USAGE_URL,
     load,
-    statusText: (parsed) => quota.statusText(parsed.windows, parsed.credits),
+    statusText: (parsed) => quota.statusText(parsed.windows, parsed.credits, parsed.resets),
     tooltip: quota.tooltipText,
     friendlyError,
     credentialReasons: ['no-key', 'unauthorized'],
+    agent: agentOptions('glm', async () => {
+      const env = { ZAI_HOST: vscode.workspace.getConfiguration('zaiQuota').get('host') || 'api.z.ai' };
+      const key = await secrets.get(SECRET_KEY);
+      if (key) {
+        env.ZAI_API_KEY = key;
+      }
+      return env;
+    }),
   });
 
   context.subscriptions.push(

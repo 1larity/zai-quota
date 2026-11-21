@@ -2,7 +2,7 @@
   "name": "zai-quota",
   "displayName": "GLM Quota",
   "description": "Show z.ai GLM Coding Plan quota usage in the VS Code status bar.",
-  "version": "0.5.2",
+  "version": "0.7.0",
   "publisher": "stellaris-local",
   "license": "CC-BY-NC-SA-4.0",
   "private": true,
@@ -16,6 +16,10 @@
     "onStartupFinished"
   ],
   "main": "./extension.js",
+  "bin": {
+    "glm-quota": "./cli.js",
+    "glm-quota-mcp": "./mcp.js"
+  },
   "contributes": {
     "commands": [
       {
@@ -36,6 +40,11 @@
       {
         "command": "zaiQuota.clearApiKey",
         "title": "Clear API Key",
+        "category": "GLM Quota"
+      },
+      {
+        "command": "zaiQuota.toggleMcp",
+        "title": "Toggle MCP Server",
         "category": "GLM Quota"
       }
     ],
@@ -86,15 +95,29 @@
             }
           },
           "markdownDescription": "Color-band thresholds in percent of quota _remaining_. Example: `{ \"redBelowPercent\": 5, \"amberBelowPercent\": 50 }`"
+        },
+        "zaiQuota.mcp.enabled": {
+          "type": "boolean",
+          "default": false,
+          "scope": "machine",
+          "markdownDescription": "Let coding agents read this quota through the MCP server (`mcp.js` in the extension folder). While on, the server is also listed in VS Code's MCP servers. The link at the foot of the status bar tooltip toggles this setting."
         }
       }
-    }
+    },
+    "mcpServerDefinitionProviders": [
+      {
+        "id": "zaiQuota.mcp",
+        "label": "GLM Quota"
+      }
+    ]
   },
   "scripts": {
     "test": "node --test test/*.test.js",
     "smoke": "node test/smoke.js",
     "vscode:prepublish": "npm test",
-    "package": "npx --yes @vscode/vsce@4.0.0 package --no-dependencies"
+    "package": "npx --yes @vscode/vsce@4.0.0 package --no-dependencies",
+    "cli": "node cli.js",
+    "mcp": "node mcp.js"
   },
   "repository": {
     "type": "git",

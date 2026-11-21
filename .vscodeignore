@@ -1,6 +1,8 @@
 **
 !package.json
 !extension.js
+!cli.js
+!mcp.js
 !lib/**
 !assets/logo.png
 !README.md
