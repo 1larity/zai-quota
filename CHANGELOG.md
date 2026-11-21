@@ -1,3 +1,8 @@
+## 0.7.1 - 2026-11-21
+
+- Published on the Visual Studio Marketplace as **Quota Monitor for GLM (z.ai)** (`1larity.zai-quota`). The extension ID changed: uninstall an earlier VSIX build before installing this one. Set the API key again afterwards: VS Code keeps secrets per extension ID.
+- Square Marketplace icon.
+
 ## 0.7.0 - 2026-11-21
 
 - Optional MCP server for coding agents, off by default: `mcp.js` with the tools `get_quota` and `get_all_quotas`. Toggle it from the link at the foot of the status bar tooltip, the **GLM Quota: Toggle MCP Server** command, or `zaiQuota.mcp.enabled`. While on, VS Code lists the server under its MCP servers.

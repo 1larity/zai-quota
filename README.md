@@ -1,33 +1,24 @@
-<p align="center"><img src="assets/logo.png" alt="GLM Quota" width="640"></p>
+<p align="center"><img src="assets/logo.png" alt="Quota Monitor for GLM (z.ai)" width="640"></p>
 
-# GLM Quota
+# Quota Monitor for GLM (z.ai)
 
 Show z.ai GLM Coding Plan quota usage in the VS Code status bar.
 
 ## Install
 
-Requires VS Code 1.74.0 or newer. Download **zai-quota-0.7.0.vsix** from the
-[EVILE project page](https://evile.uk/redesign/projects/glm-quota/).
-
-1. Open **Extensions → … → Install from VSIX…**.
-2. Select the downloaded file.
-3. Run **Developer: Reload Window** if the extension has not appeared.
-
-Or install from a terminal:
+Requires VS Code 1.74.0 or newer. Install **Quota Monitor for GLM (z.ai)** from the
+[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=1larity.zai-quota): search for it in the Extensions view, or run
 
 ```sh
-code --install-extension zai-quota-0.7.0.vsix
+code --install-extension 1larity.zai-quota
 ```
 
-Show your z.ai GLM Coding Plan quota usage in the VS Code status bar.
+To install from a file instead, download **zai-quota-0.7.1.vsix** from the
+[EVILE project page](https://evile.uk/redesign/projects/glm-quota/) and choose
+**Extensions → … → Install from VSIX…**, or run `code --install-extension zai-quota-0.7.1.vsix`.
 
-```
-$(zap) GLM 5h 63% · W 81% · R 3/2
-```
-
-Percentages mean **remaining** quota. If the account has purchased credits, the response's `CREDIT_LIMIT` entry shows up as an extra `C 87%` segment (plus a "Purchased credits" section in the tooltip); it never affects the color bands, which stay driven by the 5h/weekly windows.
-
-When the account has quota-reset packs available, an `R 3/2` segment shows how many 5-hour and weekly packs you can use. The tooltip lists each kind with its next expiry and the time of the last reset. Apply a pack from the z.ai usage page.
+If you installed a VSIX before version 0.7.1, uninstall it first: earlier builds
+used a different publisher ID, so VS Code treats them as a separate extension. Set the API key again afterwards: VS Code keeps secrets per extension ID.
 
 ## How it works
 
@@ -184,7 +175,7 @@ and no compilation step. Use Node.js 22+ for development.
 ```sh
 npm test
 node --check extension.js
-npx --yes @vscode/vsce@4.0.0 package --no-dependencies
+npx --yes @vscode/vsce@4.1.1 package --no-dependencies --githubBranch public
 ```
 
 Open the checkout in VS Code and press **F5** to launch an Extension Development

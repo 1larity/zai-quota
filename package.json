@@ -1,15 +1,16 @@
 {
   "name": "zai-quota",
-  "displayName": "GLM Quota",
+  "displayName": "Quota Monitor for GLM (z.ai)",
   "description": "Show z.ai GLM Coding Plan quota usage in the VS Code status bar.",
-  "version": "0.7.0",
-  "publisher": "stellaris-local",
+  "version": "0.7.1",
+  "publisher": "1larity",
   "license": "CC-BY-NC-SA-4.0",
   "private": true,
   "engines": {
     "vscode": "^1.74.0"
   },
   "categories": [
+    "Visualization",
     "Other"
   ],
   "activationEvents": [
@@ -115,7 +116,7 @@
     "test": "node --test test/*.test.js",
     "smoke": "node test/smoke.js",
     "vscode:prepublish": "npm test",
-    "package": "npx --yes @vscode/vsce@4.0.0 package --no-dependencies",
+    "package": "npx --yes @vscode/vsce@4.1.1 package --no-dependencies --githubBranch public",
     "cli": "node cli.js",
     "mcp": "node mcp.js"
   },
@@ -126,5 +127,16 @@
   "homepage": "https://evile.uk/redesign/projects/glm-quota/",
   "bugs": {
     "url": "https://github.com/1larity/zai-quota/issues"
-  }
+  },
+  "icon": "assets/icon.png",
+  "keywords": [
+    "glm",
+    "z.ai",
+    "zhipu",
+    "coding plan",
+    "quota",
+    "usage",
+    "status bar",
+    "mcp"
+  ]
 }

@@ -1,0 +1,36 @@
+# Publishes the VSIX attached to a GitHub release to the Visual Studio
+# Marketplace through Trusted Publishing (OIDC), so no token is stored.
+name: Publish to Marketplace
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to publish, for example v1.2.3
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download the release VSIX and checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: |
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern '*.vsix' --pattern '*.vsix.sha256'
+          sha256sum -c ./*.vsix.sha256
+          ls ./*.vsix | head -n 1 > vsix-path
+
+      - name: Publish
+        run: npx --yes @vscode/vsce@4.1.1 publish --oidc --packagePath "$(cat vsix-path)" --skip-duplicate
