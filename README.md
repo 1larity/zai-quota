@@ -7,15 +7,15 @@ Show z.ai GLM Coding Plan quota usage in the VS Code status bar.
 ## Install
 
 Requires VS Code 1.74.0 or newer. Install **Quota Monitor for GLM (z.ai)** from the
-[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=RichardBeech.zai-quota): search for it in the Extensions view, or run
+[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=RichardBeech.quota-monitor-glm): search for it in the Extensions view, or run
 
 ```sh
-code --install-extension RichardBeech.zai-quota
+code --install-extension RichardBeech.quota-monitor-glm
 ```
 
-To install from a file instead, download **zai-quota-0.7.1.vsix** from the
+To install from a file instead, download **quota-monitor-glm-0.7.1.vsix** from the
 [EVILE project page](https://evile.uk/redesign/projects/glm-quota/) and choose
-**Extensions → … → Install from VSIX…**, or run `code --install-extension zai-quota-0.7.1.vsix`.
+**Extensions → … → Install from VSIX…**, or run `code --install-extension quota-monitor-glm-0.7.1.vsix`.
 
 If you installed a VSIX before version 0.7.1, uninstall it first: earlier builds
 used a different publisher ID, so VS Code treats them as a separate extension. Set the API key again afterwards: VS Code keeps secrets per extension ID.
