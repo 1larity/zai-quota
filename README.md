@@ -4,50 +4,36 @@
 
 Show z.ai GLM Coding Plan quota usage in the VS Code status bar.
 
-## Install
+## Features
 
-Requires VS Code 1.74.0 or newer. Install **Quota Monitor for GLM (z.ai)** from the
-[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=RichardBeech.quota-monitor-glm): search for it in the Extensions view, or run
+- See remaining quota in the VS Code status bar, with colour warnings when it runs low.
+- Hover for usage windows and reset times.
+- Refresh on demand or open the provider's usage page from the Command Palette.
+- Adjust the refresh interval and warning thresholds.
+- Optionally make quota information available to coding agents through MCP.
 
-```sh
-code --install-extension RichardBeech.quota-monitor-glm
-```
+## Get started
 
-To install from a file instead, download **quota-monitor-glm-0.7.1.vsix** from the
-[EVILE project page](https://evile.uk/redesign/projects/glm-quota/) and choose
-**Extensions → … → Install from VSIX…**, or run `code --install-extension quota-monitor-glm-0.7.1.vsix`.
+1. Install **Quota Monitor for GLM (z.ai)** from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=RichardBeech.quota-monitor-glm). VS Code 1.74 or newer is required.
+2. Create a GLM Coding Plan key at [z.ai API Keys](https://z.ai/manage-apikey/apikey-list).
+3. Click the **GLM** status bar item, or run **GLM Quota: Set API Key** from the Command Palette, and enter the key. VS Code stores it in secret storage.
+4. Hover over the status bar item for quota details and reset times. Click to refresh or double-click to open the usage page.
 
-If you installed a VSIX before version 0.7.1, uninstall it first: earlier builds
-used a different publisher ID, so VS Code treats them as a separate extension. Set the API key again afterwards: VS Code keeps secrets per extension ID.
+For a key issued by BigModel in mainland China, set `zaiQuota.host` to `open.bigmodel.cn` in User settings. The default is `api.z.ai`.
 
-## How it works
+Open the Command Palette with `Ctrl+Shift+P` on Windows/Linux or `Cmd+Shift+P` on macOS and search for **GLM Quota** to find the available commands.
 
-Unlike the Codex companion extension (which talks to the local `codex` CLI), z.ai has no local CLI or documented quota API. This extension therefore calls the coding-plan usage endpoint directly:
+## Commands
 
-```
-GET https://api.z.ai/api/monitor/usage/quota/limit
-Authorization: Bearer <your z.ai API key>
-```
+- **GLM Quota: Refresh**
+- **GLM Quota: Open Usage Page**
+- **GLM Quota: Set API Key**
+- **GLM Quota: Clear API Key**
+- **GLM Quota: Toggle MCP Server**
 
-Reset packs come from a second endpoint on the same host, read on each refresh:
+## Reading your quota
 
-```
-GET https://api.z.ai/api/biz/customer-package-reset/list?targetType=PERSONAL
-```
-
-If that read fails, the quota windows still show and the reset segment is left out.
-
-The host is set by `zaiQuota.host` (`api.z.ai` or `open.bigmodel.cn`). The key is sent only to that host; there is no fallback to the other one. Only the focused VS Code window polls; other windows catch up when they regain focus.
-
-Both endpoints are **undocumented** and may change without notice. Failures are logged using fixed reason codes, not raw responses or server messages.
-
-## Setup
-
-1. Install the extension, then run **GLM Quota: Set API Key** (or click the status bar item).
-2. Paste your z.ai API key (GLM Coding Plan). It is stored in VS Code **secret storage**, outside `settings.json`, files and logs.
-3. The status bar shows remaining quota for the 5-hour and weekly windows.
-
-Create your key at [z.ai API Keys](https://z.ai/manage-apikey/apikey-list).
+The status bar shows remaining percentages for available usage windows. Hover for more detail. By default, a red warning indicates less than 10% remaining, amber indicates less than 30%, and green indicates 30% or more. The most constrained window determines the colour. You can change the thresholds in Settings.
 
 ## Settings
 
@@ -58,42 +44,16 @@ Create your key at [z.ai API Keys](https://z.ai/manage-apikey/apikey-list).
 | `zaiQuota.thresholds` | `{ "redBelowPercent": 10, "amberBelowPercent": 30 }` | Color bands: below `redBelowPercent` → red tint, below `amberBelowPercent` → amber tint, otherwise green text. |
 | `zaiQuota.mcp.enabled` | `false` | Lets coding agents read this quota through the MCP server. Toggle it from the link at the foot of the status bar tooltip. |
 
-## Security / privacy design
-
-This extension **does**:
-
-- store your z.ai API key in VS Code secret storage (`context.secrets`)
-- send that key only to the configured host (`zaiQuota.host`, default `api.z.ai`) over HTTPS, as a bearer token for the usage query
-- show the returned quota numbers in the status bar
-
-This extension **does not**:
-
-- write the key to settings, workspace files, or logs
-- send the key anywhere except the configured host
-- read workspace files, Codex/GLM session files, or credentials of other tools
-- send telemetry
-- execute model prompts (the usage endpoint is read-only and consumes no quota)
-
-## Commands
-
-- `GLM Quota: Refresh`: refresh now (clicking the status item does this; if no key is set it prompts for one)
-- `GLM Quota: Open Usage Page`: open the z.ai usage page ([z.ai/manage-apikey/coding-plan/personal/usage](https://z.ai/manage-apikey/coding-plan/personal/usage)) in your browser; double-clicking the status item does this
-- `GLM Quota: Toggle MCP Server`: turn the MCP server for coding agents on or off; the link at the foot of the tooltip does the same
-- `GLM Quota: Set API Key`: set/replace the key
-- `GLM Quota: Clear API Key`: remove the key and stored state
 
 ## Troubleshooting
 
-- `$(key) GLM ?`: no API key set, or the key was rejected; click the item or run `GLM Quota: Set API Key`.
-- `$(warning) GLM ?`: last refresh failed; hover for the reason. If your key is from BigModel, set `zaiQuota.host` to `open.bigmodel.cn`.
-- The `GLM Quota` output channel (View → Output) shows sanitized success/failure lines and fixed failure reason codes, never server-returned error text.
-- If `5h`/`W` numbers look stale after resuming from sleep, click the item to refresh.
+- A key icon and `GLM ?` means the key is missing or was rejected. Run **GLM Quota: Set API Key** to enter it again.
+- A warning icon means the last refresh failed. Hover for the reason and check that `zaiQuota.host` matches the service that issued your key.
+- Check the **GLM Quota** output channel under **View > Output** for status messages.
 
-## Privacy and workspace trust
+## Privacy and access
 
-`zaiQuota.host` is machine-scoped. Set it in **User settings**, not project settings. Only `api.z.ai` and `open.bigmodel.cn` are allowed; redirects are not followed. Your key is sent only to the selected host over HTTPS.
-No telemetry is sent by this extension. Review provider-specific credential
-handling above. Never include keys, tokens or account responses in bug reports.
+The extension sends your key over HTTPS to the configured z.ai or BigModel host. Its usage endpoints are undocumented and may change. The extension sends no telemetry. Never include keys, tokens or account responses in bug reports.
 
 ## Licence
 
@@ -166,24 +126,3 @@ env = { ZAI_API_KEY_COMMAND = "secret-tool lookup service zai account api" }
 ```
 
 Any one server reports all installed providers, so one entry per agent is enough. Give that entry `ZAI_API_KEY_COMMAND` so GLM can answer through it too.
-
-## Developer guide
-
-The extension is plain CommonJS JavaScript with **no runtime npm dependencies**
-and no compilation step. Use Node.js 22+ for development.
-
-```sh
-npm test
-node --check extension.js
-npx --yes @vscode/vsce@4.1.1 package --no-dependencies --githubBranch public
-```
-
-Open the checkout in VS Code and press **F5** to launch an Extension Development
-Host. Run `npm test` for the offline test suite.
-
-- `extension.js`: VS Code integration.
-- `lib/`: provider clients, parsers and monitor lifecycle.
-- `test/`: offline regression coverage.
-- `.vscodeignore`: files included in the extension package.
-
-See [SECURITY.md](SECURITY.md) for sensitive reporting guidance.
