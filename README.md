@@ -14,10 +14,9 @@ Show z.ai GLM Coding Plan quota usage in the VS Code status bar.
 
 ## Get started
 
-1. Install **Quota Monitor for GLM (z.ai)** from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=RichardBeech.quota-monitor-glm). VS Code 1.74 or newer is required.
-2. Create a GLM Coding Plan key at [z.ai API Keys](https://z.ai/manage-apikey/apikey-list).
-3. Click the **GLM** status bar item, or run **GLM Quota: Set API Key** from the Command Palette, and enter the key. VS Code stores it in secret storage.
-4. Hover over the status bar item for quota details and reset times. Click to refresh or double-click to open the usage page.
+1. Create a GLM Coding Plan key at [z.ai API Keys](https://z.ai/manage-apikey/apikey-list).
+2. Click the **GLM** status bar item, or run **GLM Quota: Set API Key** from the Command Palette, and enter the key. VS Code stores it in secret storage.
+3. Hover over the status bar item for quota details and reset times. Click to refresh or double-click to open the usage page.
 
 For a key issued by BigModel in mainland China, set `zaiQuota.host` to `open.bigmodel.cn` in User settings. The default is `api.z.ai`.
 
