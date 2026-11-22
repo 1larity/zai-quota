@@ -1,3 +1,7 @@
+## 0.7.2 - 2026-11-22
+
+- Updated the user guide and feature list.
+
 ## 0.7.1 - 2026-11-21
 
 - Published on the Visual Studio Marketplace as **Quota Monitor for GLM (z.ai)** (`RichardBeech.quota-monitor-glm`). The extension ID changed: uninstall an earlier VSIX build before installing this one. Set the API key again afterwards: VS Code keeps secrets per extension ID.

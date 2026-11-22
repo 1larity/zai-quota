@@ -2,7 +2,7 @@
   "name": "quota-monitor-glm",
   "displayName": "Quota Monitor for GLM (z.ai)",
   "description": "Show z.ai GLM Coding Plan quota usage in the VS Code status bar.",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "publisher": "RichardBeech",
   "license": "CC-BY-NC-SA-4.0",
   "private": true,
